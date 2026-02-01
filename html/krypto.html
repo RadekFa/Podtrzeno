@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kryptoměny a Akcie: Live kurzy 2026 | Podtrženo.cz</title>
+    <meta name="description" content="Aktuální kurzy Bitcoinu, Etherea a dalších kryptoměn v CZK. Průvodce investováním do akcií a ETF pro začátečníky se sílou složeného úročení.">
+    
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    
+    <style>
+        .market-hero { background: linear-gradient(135deg, #1a2b3c 0%, #8e44ad 100%); color: white; padding: 4rem 5%; border-radius: 0 0 30px 30px; margin-bottom: 3rem; text-align: center; }
+        .crypto-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; min-height: 100px; }
+        .crypto-card { background: white; padding: 1.5rem; border-radius: 15px; border: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .crypto-symbol { font-weight: 800; color: #1a2b3c; font-size: 1.2rem; }
+        .crypto-price { font-weight: 900; color: #0f172a; font-family: 'Courier New', monospace; font-size: 1.2rem; }
+        .price-up { color: #15803d; font-weight: bold; }
+        .price-down { color: #b91c1c; font-weight: bold; }
+        .info-section { background: white; padding: 2.5rem; border-radius: 20px; border: 1px solid #eef2f3; height: 100%; }
+        .btn-krypto { display: block; background: #8e44ad; color: white; padding: 1rem; text-decoration: none; border-radius: 8px; font-weight: 800; margin-top: 1.5rem; text-align: center; transition: 0.3s; }
+        .btn-krypto:hover { background: #732d91; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="investice.html">Investice</a></li>
+            <li><a href="krypto.html">Krypto & Akcie</a></li>
+            <li><a href="kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="market-hero">
+    <h1>Kryptoměny a Akciové trhy</h1>
+    <p>Live tržní data a průvodce světem digitálních aktiv v roce 2026.</p>
+</section>
+
+<div class="container" style="grid-template-columns: 1fr;">
+    <main>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Aktuální tržní kurzy</h2>
+            <p id="update-timer" style="color: #475569; font-size: 0.875rem;">Aktualizováno z paměti</p>
+        </div>
+
+        <div class="crypto-dashboard" id="crypto-dashboard">
+            <div class="crypto-card"><span>BTC</span> <strong>Načítání...</strong></div>
+            <div class="crypto-card"><span>ETH</span> <strong>Načítání...</strong></div>
+            <div class="crypto-card"><span>SOL</span> <strong>Načítání...</strong></div>
+        </div>
+
+        
+
+        <div class="cta-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+            <div class="info-section">
+                <h3>Akcie a ETF</h3>
+                <p>Investování do indexových fondů (např. S&P 500) umožňuje vlastnit podíl v největších firmách světa najednou. Je to základní kámen budování majetku.</p>
+                <a href="kalkulacky/slozeny-urok.html" class="btn-krypto">Kalkulačka výnosů</a>
+            </div>
+
+            <div class="info-section">
+                <h3>Kryptoměny</h3>
+                <p>Bitcoin a další kryptoaktiva představují novou digitální třídu aktiv. Nabízejí vysoký potenciál zhodnocení, ale vyžadují pevné nervy při poklesech.</p>
+                <a href="kalkulacky/fire.html" class="btn-krypto">Cesta k rentě</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer style="margin-top: 5rem; background: #1a2b3c; color: white; padding: 3rem 5%; text-align: center;">
+    <p>&copy; 2026 podtrzeno.cz | Data poskytuje CoinGecko API. Investování je rizikové.</p>
+</footer>
+
+<script>
+    function renderData(data) {
+        const dashboard = document.getElementById('crypto-dashboard');
+        const coins = [
+            { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC' },
+            { id: 'ethereum', name: 'Ethereum', symbol: 'ETH' },
+            { id: 'solana', name: 'Solana', symbol: 'SOL' },
+            { id: 'binancecoin', name: 'BNB', symbol: 'BNB' }
+        ];
+
+        let html = '';
+        coins.forEach(coin => {
+            if (data[coin.id]) {
+                const price = Math.round(data[coin.id].czk).toLocaleString('cs-CZ');
+                const change = data[coin.id].czk_24h_change.toFixed(2);
+                const isUp = change >= 0;
+                html += `
+                    <div class="crypto-card">
+                        <div class="crypto-info">
+                            <span class="crypto-symbol">${coin.symbol}</span>
+                            <div style="font-size: 0.8rem; color: #64748b">${coin.name}</div>
+                        </div>
+                        <div style="text-align: right">
+                            <div class="crypto-price">${price} Kč</div>
+                            <div class="${isUp ? 'price-up' : 'price-down'}">${isUp ? '+' : ''}${change}%</div>
+                        </div>
+                    </div>`;
+            }
+        });
+        dashboard.innerHTML = html;
+    }
+
+    async function fetchCryptoData() {
+        const cacheKey = 'kryptoFullData';
+        const cacheTimeKey = 'kryptoTime';
+        const cached = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(cacheTimeKey);
+        const now = Date.now();
+
+        // Pokud je cache mladší 2 minuty, ani nezkoušej API (šetříme limity)
+        if (cached && cachedTime && (now - cachedTime < 120000)) {
+            renderData(JSON.parse(cached));
+            return;
+        }
+
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=czk&include_24hr_change=true');
+            
+            if (res.status === 429 && cached) {
+                renderData(JSON.parse(cached));
+                document.getElementById('update-timer').innerText = "Limit API (použita cache)";
+                return;
+            }
+
+            const data = await res.json();
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+            localStorage.setItem(cacheTimeKey, now.toString());
+            renderData(data);
+            document.getElementById('update-timer').innerText = "Live data aktualizována";
+
+        } catch (e) {
+            if (cached) renderData(JSON.parse(cached));
+        }
+    }
+
+    window.addEventListener('load', () => {
+        fetchCryptoData();
+        setInterval(fetchCryptoData, 60000);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulačka ceny paliva a cesty | Podtrženo.cz</title>
+    <meta name="description" content="Naplánujte si náklady na cestu autem pro rok 2026. Jednoduchý výpočet spotřeby paliva, ceny benzínu či nafty a rozpočet nákladů na osobu.">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.png">
+    <link rel="apple-touch-icon" href="../../favicon.png">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 1.2rem; }
+        
+        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
+        .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+        
+        .input-main { width: 100%; padding: 0.8rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .input-main:focus { border-color: #c2410c; outline: none; }
+        
+        /* ACCESSIBILITY OPRAVA: Sytější oranžová pro tlačítko (Contrast AA vůči bílé) */
+        .btn-calc { background: #c2410c; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 1rem; font-size: 1.1rem; }
+        .btn-calc:hover { background: #9a3412; }
+        
+        .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #fffaf0; border: 2px solid #c2410c; border-radius: 12px; text-align: center; }
+        
+        /* ACCESSIBILITY OPRAVA: Tmavší barvy výsledků */
+        .orange-val { font-size: 2.5rem; font-weight: 900; color: #c2410c; }
+        .res-box strong { color: #0f172a; font-weight: 800; }
+        .per-person-text { color: #c2410c; font-weight: 800; }
+
+        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
+        .disclaimer-footer {
+            background-color: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: #1e293b; 
+            text-align: center;
+            line-height: 1.6;
+        }
+        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
+
+        footer {
+            background: #1a2b3c;
+            color: #f8fafc;
+            padding: 2.5rem 5%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="../investice.html">Investice</a></li>
+            <li><a href="../krypto.html">Krypto & Akcie</a></li>
+            <li><a href="../kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <main>
+        <h1>Kalkulačka ceny cesty a paliva</h1>
+        <p style="margin-bottom: 2rem; color: #334155; font-weight: 500;">Naplánujte si náklady na cestu autem. Zadejte trasu, spotřebu a zjistěte, kolik vás bude stát výlet.</p>
+
+        <div class="calc-card">
+            <div class="input-group">
+                <label class="form-label" for="distance">Délka trasy (km)</label>
+                <input type="number" id="distance" class="input-main" value="100" step="10">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="consumption">Průměrná spotřeba (l/100 km)</label>
+                <input type="number" id="consumption" class="input-main" value="6.5" step="0.1">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="fuel-price">Cena za litr paliva (Kč)</label>
+                <input type="number" id="fuel-price" class="input-main" value="38" step="0.5">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="people">Počet osob ve voze</label>
+                <input type="number" id="people" class="input-main" value="1" min="1">
+            </div>
+
+            <button class="btn-calc" onclick="calculateTrip()">Vypočítat náklady na cestu</button>
+
+            <div id="res-box" class="res-box">
+                <span style="font-weight:700; color:#c2410c; font-size: 1.1rem;">Celkové náklady na palivo:</span>
+                <div id="total-trip-cost" class="orange-val">0 Kč</div>
+                
+                <div class="result-breakdown" style="margin-top: 1.5rem; border-top: 2px solid #fed7aa; padding-top: 1.2rem; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Spotřebováno paliva:</span>
+                        <strong id="out-liters"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;" class="per-person-text">
+                        <span>Náklady na 1 osobu:</span>
+                        <strong id="out-per-person"></strong>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
+                    * Výpočet nákladů je odhadem. Skutečná spotřeba závisí na stylu jízdy, zatížení vozu a stavu vozovky.
+                </p>
+            </div>
+        </div>
+
+        <article style="margin-top: 4rem;">
+            <h2>Jak vypočítat spotřebu paliva?</h2>
+            <p>Základní vzorec pro výpočet ceny cesty je: <strong>(vzdálenost / 100) × spotřeba × cena paliva</strong>. Reálná spotřeba se často liší od údajů výrobce, zejména při jízdě v městském provozu nebo s plně naloženým kufrem.</p>
+            
+            
+        </article>
+    </main>
+
+    <aside>
+        <div class="ad-space"></div>
+    </aside>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Důležité upozornění:</strong>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani právní poradenství.</p>
+</div>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
+    </div>
+</footer>
+
+<script>
+    function calculateTrip() {
+        const distance = parseFloat(document.getElementById('distance').value);
+        const consumption = parseFloat(document.getElementById('consumption').value);
+        const fuelPrice = parseFloat(document.getElementById('fuel-price').value);
+        const people = parseInt(document.getElementById('people').value);
+
+        if (isNaN(distance) || isNaN(consumption) || isNaN(fuelPrice)) return;
+
+        const totalLiters = (distance / 100) * consumption;
+        const totalCost = totalLiters * fuelPrice;
+        const perPerson = totalCost / Math.max(1, people);
+
+        const fmt = (num) => Math.round(num).toLocaleString('cs-CZ') + ' Kč';
+
+        document.getElementById('total-trip-cost').innerText = fmt(totalCost);
+        document.getElementById('out-liters').innerText = totalLiters.toFixed(2).replace('.', ',') + ' litrů';
+        document.getElementById('out-per-person').innerText = fmt(perPerson);
+
+        document.getElementById('res-box').style.display = 'block';
+    }
+</script>
+</body>
+</html>

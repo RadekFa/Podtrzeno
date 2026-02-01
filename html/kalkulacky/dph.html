@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulačka DPH 2026 | Podtrženo.cz</title>
+    <meta name="description" content="Rychlý výpočet DPH pro rok 2026. Snadno připočtěte daň k základu nebo vypočítejte DPH z celkové ceny online. Podpora pro sazby 21 % a 12 %.">
+    
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.png">
+    <link rel="apple-touch-icon" href="../../favicon.png">
+    <style>
+        .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 1.2rem; }
+        
+        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
+        .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+        
+        .input-main { width: 100%; padding: 0.8rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .input-main:focus { border-color: #6b21a8; outline: none; }
+        
+        .radio-group { display: flex; gap: 15px; margin-bottom: 1.5rem; background: #f9fafb; padding: 1rem; border-radius: 8px; }
+        .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #1e293b; }
+        
+        /* ACCESSIBILITY OPRAVA: Tmavší fialová pro tlačítko (splňuje kontrast AA vůči bílé) */
+        .btn-calc { background: #6b21a8; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 1rem; font-size: 1.1rem; }
+        .btn-calc:hover { background: #581c87; }
+        
+        /* ACCESSIBILITY OPRAVA: Barvy výsledků */
+        .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #faf5ff; border: 2px solid #6b21a8; border-radius: 12px; text-align: center; }
+        .purple-val { font-size: 2.5rem; font-weight: 900; color: #6b21a8; }
+        .res-box strong { color: #0f172a; font-weight: 800; }
+        .vat-text { color: #6b21a8; font-weight: 800; }
+
+        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
+        .disclaimer-footer {
+            background-color: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: #1e293b; 
+            text-align: center;
+            line-height: 1.6;
+        }
+        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
+
+        footer {
+            background: #1a2b3c;
+            color: #f8fafc;
+            padding: 2.5rem 5%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="../investice.html">Investice</a></li>
+            <li><a href="../krypto.html">Krypto & Akcie</a></li>
+            <li><a href="../kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <main>
+        <h1>Kalkulačka DPH 2026</h1>
+        <p style="margin-bottom: 2rem; color: #334155; font-weight: 500;">Rychlý výpočet daně z přidané hodnoty. Připočtení DPH k ceně nebo výpočet daně z celkové částky.</p>
+
+        <div class="calc-card">
+            <div class="input-group">
+                <label class="form-label" for="amount">Částka (Kč)</label>
+                <input type="number" id="amount" class="input-main" value="1000">
+            </div>
+
+            <p class="form-label">Sazba DPH</p>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="vat-rate" value="21" checked> 21 % (Základní)</label>
+                <label class="radio-option"><input type="radio" name="vat-rate" value="12"> 12 % (Snížená)</label>
+                <label class="radio-option"><input type="radio" name="vat-rate" value="0"> 0 %</label>
+            </div>
+
+            <p class="form-label">Typ výpočtu</p>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="calc-type" value="add" checked> Připočíst k základu</label>
+                <label class="radio-option"><input type="radio" name="calc-type" value="extract"> Vypočítat z celkové ceny</label>
+            </div>
+
+            <button class="btn-calc" onclick="calculateVAT()">Vypočítat výsledek</button>
+
+            <div id="res-box" class="res-box">
+                <span id="res-label" style="font-weight:700; color:#581c87; font-size: 1.1rem;">Celková cena s DPH:</span>
+                <div id="main-result" class="purple-val">0 Kč</div>
+                
+                <div class="result-breakdown" style="margin-top: 1.5rem; border-top: 2px solid #e9d5ff; padding-top: 1.2rem; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Základ daně (bez DPH):</span>
+                        <strong id="out-base"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;" class="vat-text">
+                        <span>Samotná daň (DPH):</span>
+                        <strong id="out-vat"></strong>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
+                    * Výpočet je orientační. Konečná částka se může mírně lišit dle zvoleného zaokrouhlování podle zákona o DPH.
+                </p>
+            </div>
+        </div>
+
+        <article style="margin-top: 4rem;">
+            <h2>Sazby DPH v roce 2026</h2>
+            <p>V České republice platí od ledna 2024 dvě hlavní sazby DPH: základní <strong>21 %</strong> a snížená <strong>12 %</strong>. Snížená sazba sjednocuje dřívější kategorie a vztahuje se například na potraviny, vybrané léky či ubytovací služby.</p>
+            
+            
+        </article>
+    </main>
+
+    <aside>
+        <div class="ad-space"></div>
+    </aside>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Důležité upozornění:</strong>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani právní poradenství.</p>
+</div>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
+    </div>
+</footer>
+
+<script>
+    function calculateVAT() {
+        const amount = parseFloat(document.getElementById('amount').value);
+        const rateNode = document.querySelector('input[name="vat-rate"]:checked');
+        const typeNode = document.querySelector('input[name="calc-type"]:checked');
+        
+        if (isNaN(amount) || !rateNode || !typeNode) return;
+
+        const rate = parseFloat(rateNode.value) / 100;
+        const type = typeNode.value;
+
+        let base, vat, total;
+
+        if (type === 'add') {
+            base = amount;
+            vat = base * rate;
+            total = base + vat;
+            document.getElementById('res-label').innerText = "Celková cena s DPH:";
+            document.getElementById('main-result').innerText = fmt(total);
+        } else {
+            total = amount;
+            base = total / (1 + rate);
+            vat = total - base;
+            document.getElementById('res-label').innerText = "Základ daně (bez DPH):";
+            document.getElementById('main-result').innerText = fmt(base);
+        }
+
+        function fmt(num) {
+            return num.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Kč';
+        }
+
+        document.getElementById('out-base').innerText = fmt(base);
+        document.getElementById('out-vat').innerText = fmt(vat);
+        document.getElementById('res-box').style.display = 'block';
+    }
+</script>
+</body>
+</html>

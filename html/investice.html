@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investování pro začátečníky: Jak začít v roce 2026 | Podtrženo.cz</title>
+    <meta name="description" content="Naučte se základy investování. Srovnání spoření a akcií, magie složeného úročení a cesta k finanční nezávislosti (FIRE) na jednom místě.">
+    
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <style>
+        .invest-hero { background: linear-gradient(135deg, #1a2b3c 0%, #27ae60 100%); color: white; padding: 4rem 5%; border-radius: 0 0 30px 30px; margin-bottom: 3rem; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .comparison-table th, .comparison-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid #eee; }
+        
+        /* SEO/ACCESSIBILITY OPRAVA: Kontrast záhlaví tabulky */
+        .comparison-table th { background: #f1f5f9; color: #0f172a; font-weight: 800; }
+        
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .feature-card { background: white; padding: 2rem; border-radius: 15px; border-left: 5px solid #27ae60; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .calc-link { display: flex; align-items: center; padding: 1.5rem; background: #fff; border: 2px solid #eee; border-radius: 12px; text-decoration: none; color: #1a2b3c; font-weight: 700; transition: 0.3s; }
+        .calc-link:hover { border-color: #27ae60; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .calc-link svg { margin-right: 15px; color: #27ae60; }
+
+        /* ACCESSIBILITY OPRAVA: Kontrast v patičce */
+        .disclaimer-footer {
+            background: #f1f5f9;
+            padding: 2rem 5%;
+            font-size: 0.875rem;
+            color: #1e293b; /* Tmavě břidlicová pro čitelnost */
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #1a2b3c;
+            color: #f8fafc;
+            padding: 2.5rem 5%;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+       @media (max-width: 600px) {
+    /* Zrušíme fixní šířky a dovolíme tabulce se smrštit */
+    .rates-table-container, .comparison-table-wrapper {
+        padding: 10px 5px !important;
+        width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .rates-table, .comparison-table {
+        min-width: 0 !important; /* Zrušení předchozího limitu */
+        width: 100% !important;
+        table-layout: fixed; /* Důležité: sloupce se musí rozdělit o dostupné místo */
+    }
+
+    .rates-table th, .rates-table td,
+    .comparison-table th, .comparison-table td {
+        padding: 8px 4px !important;
+        font-size: 0.75rem !important; /* Menší písmo pro mobil */
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Specifické nastavení šířek sloupců pro kurzy, aby čísla měla místo */
+    .rates-table th:nth-child(1), .rates-table td:nth-child(1) { width: 30%; }
+    .rates-table th:nth-child(2), .rates-table td:nth-child(2) { width: 15%; }
+    .rates-table th:nth-child(3), .rates-table td:nth-child(3) { width: 30%; }
+    .rates-table th:nth-child(4), .rates-table td:nth-child(4) { width: 25%; }
+}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="investice.html">Investice</a></li>
+            <li><a href="krypto.html">Krypto & Akcie</a></li>
+            <li><a href="kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="invest-hero">
+    <h1>Investování: Cesta k finanční svobodě</h1>
+    <p>Investování je způsob, jak nechat peníze pracovat pro vás, místo abyste vy pracovali pro ně.</p>
+</section>
+
+<div class="container" style="grid-template-columns: 1fr;">
+    <main>
+        <h2>Proč investovat a nenechat peníze "ležet"?</h2>
+        <p>Největším nepřítelem vašich úspor je <strong>inflace</strong>. Pokud máte peníze na běžném účtu s úrokem 0,01 %, každý rok si za ně koupíte přibližně o několik procent méně věcí. Investování je cesta, jak hodnotu peněz dlouhodobě chránit.</p>
+
+        
+
+        <h3>Srovnání: Spoření vs. Investování</h3>
+        <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Charakteristika</th>
+                    <th>Spořicí účet</th>
+                    <th>Investování (Akcie/ETF)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Riziko</strong></td>
+                    <td>Minimální (pojištěno)</td>
+                    <td>Kolísavé (tržní riziko)</td>
+                </tr>
+                <tr>
+                    <td><strong>Potenciální výnos</strong></td>
+                    <td>Nízký</td>
+                    <td>Vyšší (7–9 % p.a.)</td>
+                </tr>
+                <tr>
+                    <td><strong>Likvidita</strong></td>
+                    <td>Okamžitá</td>
+                    <td>Dny (prodej aktiv)</td>
+                </tr>
+                <tr>
+                    <td><strong>Doporučený horizont</strong></td>
+                    <td>Krátkodobý</td>
+                    <td>Dlouhodobý (5+ let)</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="feature-grid">
+            <section class="feature-card">
+                <h3>Magie složeného úročení</h3>
+                <p>Když reinvestujete své zisky, v dalším roce se úročí i tyto zisky. Čas je v investování důležitější než počáteční vklad.</p>
+            </section>
+            <section class="feature-card">
+                <h3>Pravidelnost vítězí</h3>
+                <p>Důležité je začít. I malá částka investovaná každý měsíc vytvoří díky disciplíně stabilní finanční polštář.</p>
+            </section>
+        </div>
+
+        <h2 style="margin-top: 4rem;">Vyzkoušejte naše investiční nástroje</h2>
+        <div class="link-grid">
+            <a href="kalkulacky/slozeny-urok.html" class="calc-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Kalkulačka složeného úročení
+            </a>
+            <a href="kalkulacky/srovnani-investic.html" class="calc-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M4 4l5 5"></path></svg>
+                Srovnání investic vs. spoření
+            </a>
+            <a href="kalkulacky/fire.html" class="calc-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                Cesta k rentě (FIRE)
+            </a>
+            <a href="kalkulacky/inflace.html" class="calc-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                Kalkulačka dopadu inflace
+            </a>
+        </div>
+    </main>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Právní upozornění:</strong> Obsah této stránky slouží výhradně pro informační účely a nepředstavuje investiční poradenství. Investování zahrnuje riziko ztráty kapitálu.
+</div>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 podtrzeno.cz | Investování zahrnuje riziko kolísání hodnoty.
+    </div>
+</footer>
+
+</body>
+</html>

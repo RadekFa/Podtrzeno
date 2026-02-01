@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /app.js
+Disallow: /styles.css
+
+# Mapa webu pro vyhledávače
+Sitemap: https://podtrzeno.cz/sitemap.xml

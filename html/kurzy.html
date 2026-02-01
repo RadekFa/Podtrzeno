@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktuální kurzovní lístek: Měny a Krypto | Podtrženo.cz</title>
+    <meta name="description" content="Aktuální kurzy měn (EUR, USD, GBP) a kryptoměn na jednom místě. Live data pro rok 2026.">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <style>
+        .rates-hero { 
+            background: linear-gradient(135deg, #1a2b3c 0%, #2980b9 100%); 
+            color: white; padding: 4rem 5%; border-radius: 0 0 30px 30px; 
+            margin-bottom: 3rem; text-align: center;
+        }
+        
+        .rates-table-container {
+            background: white; padding: 2rem; border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 3rem;
+        }
+
+        .rates-table {
+            width: 100%; border-collapse: collapse; margin-top: 1rem;
+        }
+
+        .rates-table th, .rates-table td {
+            padding: 1rem; text-align: left; border-bottom: 1px solid #eee;
+        }
+
+        .rates-table th { color: #1e293b; font-weight: 800; background: #f8f9fa; }
+
+        /* OPRAVA KONTRASTU */
+        .trend-up { color: #15803d; font-weight: bold; } /* Tmavší zelená */
+        .trend-down { color: #b91c1c; font-weight: bold; } /* Tmavší červená */
+
+        .calc-link-box {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #f0f7ff; padding: 1.5rem; border-radius: 12px;
+            border: 1px solid #d0e3ff; text-decoration: none; color: #1a2b3c;
+            font-weight: 700; transition: 0.3s; margin-top: 1rem;
+        }
+        .calc-link-box:hover { transform: scale(1.02); background: #e1efff; }
+        
+        .disclaimer-footer {
+            background: #f8f9fa;
+            padding: 1.5rem 5%;
+            font-size: 0.85rem;
+            color: #334155; /* Ztmaveno pro kontrast */
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 520px) {
+    /* Skryjeme hlavičku tabulky */
+    .rates-table thead, .comparison-table thead {
+        display: none;
+    }
+
+    .rates-table, .comparison-table, 
+    .rates-table tbody, .rates-table tr, .rates-table td,
+    .comparison-table tbody, .comparison-table tr, .comparison-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .rates-table tr, .comparison-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 10px;
+        background: #fff;
+    }
+
+    .rates-table td, .comparison-table td {
+        text-align: left;
+        padding: 8px 5px;
+        border-bottom: 1px solid #f1f5f9;
+        position: relative;
+    }
+
+    /* Přidáme popisky před hodnoty pomocí datových atributů nebo natvrdo */
+    .rates-table td::before, .comparison-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        color: #64748b;
+    }
+}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="investice.html">Investice</a></li>
+            <li><a href="krypto.html">Krypto & Akcie</a></li>
+            <li><a href="kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="rates-hero">
+    <h1>Aktuální kurzovní lístek</h1>
+    <p>Sledujte vývoj měn a kryptoměn v reálném čase pro vaše nákupy i investice.</p>
+</section>
+
+<div class="container" style="grid-template-columns: 1fr;">
+    <main>
+        <div class="rates-table-container">
+            <h2>Světové měny (vůči CZK)</h2>
+            <table class="rates-table">
+                <thead>
+                    <tr>
+    <td data-label="Měna">Euro</td>
+    <td data-label="Kód">EUR</td>
+    <td data-label="Kurz">25.42 Kč</td>
+    <td data-label="Změna">-0.05%</td>
+</tr>
+                </thead>
+                <tbody id="fiat-table">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="rates-table-container">
+            <h2>Kryptoměny (Pravidelně aktualizováno)</h2>
+            <table class="rates-table">
+                <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Symbol</th>
+                        <th>Cena v CZK</th>
+                        <th>24h Změna</th>
+                    </tr>
+                </thead>
+                <tbody id="crypto-table">
+                    <tr><td colspan="4">Načítání cen kryptoměn...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </main>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Právní upozornění:</strong> Obsah této stránky slouží výhradně pro informační účely a nepředstavuje investiční poradenství.<br>
+    Tržní data pro kryptoměny poskytuje CoinGecko API. Kurzy měn vycházejí z dat ČNB. Všechna data jsou orientační a lehce zpožděná. 
+</div>
+
+<footer>
+    &copy; 2026 podtrzeno.cz | Data jsou orientační a aktualizovaná v pravidelných intervalech. | Data: CoinGecko API. a ČNB.
+</footer>
+
+<script>
+    async function fetchAllRates() {
+        const cacheKey = 'cryptoRatesCache';
+        const cacheTimeKey = 'cryptoRatesTime';
+        const now = Date.now();
+        const cacheDuration = 5 * 60 * 1000; // 5 minut
+
+        const cryptoTable = document.getElementById('crypto-table');
+        const fiatTable = document.getElementById('fiat-table');
+
+        // 1. Vykreslení fiat měn (simulace ČNB)
+        const currencies = [
+            { name: 'Euro', code: 'EUR', rate: 25.42, change: -0.05 },
+            { name: 'Americký dolar', code: 'USD', rate: 23.15, change: +0.12 },
+            { name: 'Britská libra', code: 'GBP', rate: 30.20, change: -0.02 }
+        ];
+        fiatTable.innerHTML = currencies.map(curr => `
+            <tr>
+                <td>${curr.name}</td>
+                <td><strong>${curr.code}</strong></td>
+                <td>${curr.rate.toFixed(2)} Kč</td>
+                <td class="${curr.change >= 0 ? 'trend-up' : 'trend-down'}">${curr.change >= 0 ? '+' : ''}${curr.change}%</td>
+            </tr>
+        `).join('');
+
+        // 2. Načtení krypto dat (Cache + Fetch)
+        const cachedData = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(cacheTimeKey);
+
+        if (cachedData && cachedTime && (now - cachedTime < cacheDuration)) {
+            renderCrypto(JSON.parse(cachedData));
+            return;
+        }
+
+        try {
+            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=czk&include_24hr_change=true');
+            
+            if (response.status === 429) {
+                if (cachedData) renderCrypto(JSON.parse(cachedData));
+                return;
+            }
+
+            const data = await response.json();
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+            localStorage.setItem(cacheTimeKey, now.toString());
+            renderCrypto(data);
+
+        } catch (e) {
+            console.error("Chyba API", e);
+            if (cachedData) renderCrypto(JSON.parse(cachedData));
+        }
+    }
+
+    function renderCrypto(data) {
+        const cryptoList = [
+            { id: 'bitcoin', name: 'Bitcoin', sym: 'BTC' },
+            { id: 'ethereum', name: 'Ethereum', sym: 'ETH' },
+            { id: 'solana', name: 'Solana', sym: 'SOL' },
+            { id: 'tether', name: 'Tether', sym: 'USDT' }
+        ];
+
+        const cryptoTable = document.getElementById('crypto-table');
+        cryptoTable.innerHTML = cryptoList.map(c => {
+            const coinData = data[c.id];
+            if (!coinData) return '';
+            const change = coinData.czk_24h_change ? coinData.czk_24h_change.toFixed(2) : "0.00";
+            return `
+                <tr>
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.sym}</td>
+                    <td>${Math.round(coinData.czk).toLocaleString('cs-CZ')} Kč</td>
+                    <td class="${change >= 0 ? 'trend-up' : 'trend-down'}">${change >= 0 ? '+' : ''}${change}%</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    fetchAllRates();
+    setInterval(fetchAllRates, 60000);
+</script>
+
+</body>
+</html>

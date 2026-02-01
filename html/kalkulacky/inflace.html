@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulačka inflace | Podtrženo.cz</title>
+    <meta name="description" content="Spočítejte si, jak inflace ovlivní vaše úspory v čase. Jednoduchá kalkulačka ztráty kupní síly peněz pro rok 2026.">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.png">
+    <link rel="apple-touch-icon" href="../../favicon.png">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 1.2rem; }
+        
+        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
+        .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+        
+        .input-main { width: 100%; padding: 0.8rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .input-main:focus { border-color: #b91c1c; outline: none; }
+        
+        /* ACCESSIBILITY OPRAVA: Tmavší červená pro tlačítko (splňuje kontrast AA) */
+        .btn-calc { background: #b91c1c; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 1rem; font-size: 1.1rem; }
+        .btn-calc:hover { background: #991b1b; }
+        
+        .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #fef2f2; border: 2px solid #b91c1c; border-radius: 12px; text-align: center; }
+        
+        /* ACCESSIBILITY OPRAVA: Tmavší barvy pro texty ve výsledcích */
+        .negative-val { font-size: 2.5rem; font-weight: 900; color: #b91c1c; }
+        .res-box strong { color: #0f172a; font-weight: 800; }
+        .loss-text { color: #b91c1c; font-weight: 800; }
+
+        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
+        .disclaimer-footer {
+            background-color: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: #1e293b; 
+            text-align: center;
+            line-height: 1.6;
+        }
+        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
+
+        footer {
+            background: #1a2b3c;
+            color: #f8fafc;
+            padding: 2.5rem 5%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="../investice.html">Investice</a></li>
+            <li><a href="../krypto.html">Krypto & Akcie</a></li>
+            <li><a href="../kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <main>
+        <h1>Kalkulačka budoucí inflace</h1>
+        <p style="margin-bottom: 2rem; color: #334155; font-weight: 500;">Zjistěte, jak se kupní síla vašich úspor změní v čase při zvolené míře inflace.</p>
+
+        <div class="calc-card">
+            <div class="input-group">
+                <label class="form-label" for="amount">Dnešní částka (Kč)</label>
+                <input type="number" id="amount" class="input-main" value="100000">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="years">Počet let</label>
+                <input type="number" id="years" class="input-main" value="10">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="inflation-rate">Očekávaná roční inflace (%)</label>
+                <input type="number" id="inflation-rate" class="input-main" value="3" step="0.1">
+            </div>
+
+            <button class="btn-calc" onclick="calculateInflation()">Spočítat ztrátu hodnoty</button>
+
+            <div id="res-box" class="res-box">
+                <span style="font-weight:700; color:#b91c1c; font-size: 1.1rem;">Reálná hodnota peněz za danou dobu:</span>
+                <div id="future-value" class="negative-val">0 Kč</div>
+                
+                <div class="result-breakdown" style="margin-top: 1.5rem; border-top: 2px solid #fee2e2; padding-top: 1.2rem; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Nominální částka zůstává:</span>
+                        <strong id="out-nominal"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;" class="loss-text">
+                        <span>Ztráta kupní síly:</span>
+                        <strong id="out-loss"></strong>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
+                    * Výpočet využívá odhadovanou inflaci. Budoucí kupní síla peněz je orientačním výpočtem na základě zadaných parametrů.
+                </p>
+            </div>
+        </div>
+
+        <article style="margin-top: 4rem;">
+            <h2>Co je to inflace?</h2>
+            <p>Inflace představuje všeobecný nárůst cenové hladiny zboží a služeb v ekonomice. Zjednodušeně řečeno: za stejnou tisícikorunu si za rok koupíte méně věcí než dnes.</p>
+            
+            
+        </article>
+    </main>
+
+    <aside>
+        <div class="ad-space"></div>
+    </aside>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Důležité upozornění:</strong>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani právní poradenství. Neneseme odpovědnost za případné škody vzniklé na základě informací z tohoto webu.</p>
+</div>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
+    </div>
+</footer>
+
+<script>
+    function calculateInflation() {
+        const p = parseFloat(document.getElementById('amount').value);
+        const t = parseFloat(document.getElementById('years').value);
+        const r_val = parseFloat(document.getElementById('inflation-rate').value);
+
+        if (isNaN(p) || isNaN(t) || isNaN(r_val)) return;
+
+        const r = r_val / 100;
+        // Vzorec pro budoucí kupní sílu: FV = P / (1 + r)^t
+        const futurePurchasingPower = p / Math.pow(1 + r, t);
+        const loss = p - futurePurchasingPower;
+
+        const fmt = (num) => Math.round(num).toLocaleString('cs-CZ') + ' Kč';
+
+        document.getElementById('future-value').innerText = fmt(futurePurchasingPower);
+        document.getElementById('out-nominal').innerText = fmt(p);
+        document.getElementById('out-loss').innerText = "- " + fmt(loss);
+
+        document.getElementById('res-box').style.display = 'block';
+    }
+</script>
+</body>
+</html>

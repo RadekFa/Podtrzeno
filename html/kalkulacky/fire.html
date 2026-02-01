@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulačka finanční nezávislosti (FIRE) | Podtrženo.cz</title>
+    <meta name="description" content="Spočítejte si svou cílovou částku pro finanční nezávislost. Zjistěte, kolik musíte mít naspořeno, abyste mohli žít z renty podle pravidla 4 %.">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.png">
+    <link rel="apple-touch-icon" href="../../favicon.png">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 1.2rem; }
+        
+        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
+        .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+        
+        .input-main { width: 100%; padding: 0.8rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .input-main:focus { border-color: #d91d2a; outline: none; }
+        
+        /* ACCESSIBILITY OPRAVA: Sytější červená pro tlačítko a badge (Contrast AA) */
+        .btn-calc { background: #d91d2a; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 1rem; font-size: 1.1rem; }
+        .btn-calc:hover { background: #b91c1c; }
+        
+        .badge { background: #d91d2a; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; margin-left: 10px; text-transform: uppercase; font-weight: 800; }
+        
+        .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #fff5f6; border: 2px solid #d91d2a; border-radius: 12px; text-align: center; }
+        .fire-val { font-size: 2.5rem; font-weight: 900; color: #d91d2a; }
+        
+        /* ACCESSIBILITY OPRAVA: Čitelnost výsledků a pomocných textů */
+        .res-box strong { color: #0f172a; font-weight: 800; }
+        .remaining-text { color: #d91d2a; font-weight: 800; }
+        .input-hint { color: #475569; font-size: 0.85rem; display: block; margin-top: 0.25rem; font-weight: 500; }
+
+        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
+        .disclaimer-footer {
+            background-color: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: #1e293b; 
+            text-align: center;
+            line-height: 1.6;
+        }
+        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
+
+        footer {
+            background: #1a2b3c;
+            color: #f8fafc;
+            padding: 2.5rem 5%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="../investice.html">Investice</a></li>
+            <li><a href="../krypto.html">Krypto & Akcie</a></li>
+            <li><a href="../kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <main>
+        <h1>Kalkulačka finanční nezávislosti <span class="badge">Fire</span></h1>
+        <p style="margin-bottom: 2rem; color: #334155; font-weight: 500;">Zjistěte, kolik peněz musíte mít zainvestováno, abyste mohli přestat pracovat a žít z renty.</p>
+
+        <div class="calc-card">
+            <div class="input-group">
+                <label class="form-label" for="target-renta">Vaše požadovaná měsíční renta (Kč)</label>
+                <input type="number" id="target-renta" class="input-main" value="40000" step="1000">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="current-savings">Aktuální úspory (Kč)</label>
+                <input type="number" id="current-savings" class="input-main" value="100000">
+            </div>
+            <div class="input-group">
+                <label class="form-label" for="return-rate">Očekávaný roční výnos (%)</label>
+                <input type="number" id="return-rate" class="input-main" value="4" step="0.1">
+                <span class="input-hint">Standardně se používá 4 % (bezpečný výběr).</span>
+            </div>
+
+            <button class="btn-calc" onclick="calculateFIRE()">Vypočítat cílovou částku</button>
+
+            <div id="res-box" class="res-box">
+                <span style="font-weight:700; color:#d91d2a; font-size: 1.1rem;">Cílový majetek pro nekonečnou rentu:</span>
+                <div id="total-fire-sum" class="fire-val">0 Kč</div>
+                
+                <div class="result-breakdown" style="margin-top: 1.5rem; border-top: 2px solid #ffdadc; padding-top: 1.2rem; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Roční rozpočet:</span>
+                        <strong id="out-annual"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;" class="remaining-text">
+                        <span>Zbývá naspořit:</span>
+                        <strong id="out-remaining"></strong>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
+                    * Výpočet je orientační. Investování na trzích zahrnuje riziko kolísání hodnoty. Budoucí výnosy nejsou zaručeny.
+                </p>
+            </div>
+        </div>
+
+        <article style="margin-top: 4rem;">
+            <h2>Co je to pravidlo 4 %?</h2>
+            <p>Pravidlo vychází ze studie Trinity. Říká, že pokud máte své peníze v portfoliu složeném z akcií a dluhopisů, můžete každý rok vybrat 4 % z celkové částky (upravené o inflaci), aniž byste svůj kapitál v horizontu 30 let vyčerpali.</p>
+            
+            
+        </article>
+    </main>
+
+    <aside>
+        <div class="ad-space"></div>
+    </aside>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Důležité upozornění:</strong>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani investiční poradenství. Investování na kapitálových trzích zahrnuje rizika.</p>
+</div>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
+    </div>
+</footer>
+
+<script>
+    function calculateFIRE() {
+        const monthly = parseFloat(document.getElementById('target-renta').value);
+        const current = parseFloat(document.getElementById('current-savings').value);
+        const rate_val = parseFloat(document.getElementById('return-rate').value);
+
+        if (isNaN(monthly) || isNaN(rate_val) || rate_val === 0) return;
+
+        const rate = rate_val / 100;
+        const annual = monthly * 12;
+        const targetSum = annual / rate;
+        const remaining = Math.max(0, targetSum - current);
+
+        const fmt = (num) => Math.round(num).toLocaleString('cs-CZ') + ' Kč';
+
+        document.getElementById('total-fire-sum').innerText = fmt(targetSum);
+        document.getElementById('out-annual').innerText = fmt(annual);
+        document.getElementById('out-remaining').innerText = fmt(remaining);
+
+        document.getElementById('res-box').style.display = 'block';
+    }
+</script>
+</body>
+</html>

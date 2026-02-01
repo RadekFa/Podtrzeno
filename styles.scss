@@ -1,0 +1,378 @@
+// --- 1. PROMĚNNÉ (Snadná údržba) ---
+$primary: #27ae60;
+$primary-dark: #219150;
+$secondary: #1a2b3c;
+$bg: #f8f9fa;
+$white: #ffffff;
+$text: #333;
+$text-light: #666;
+$border: #eeeeee;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$radius: 12px;
+$transition: 0.3s ease-in-out;
+
+// Breakpointy pro responsivitu
+$tablet: 900px;
+$mobile: 600px;
+
+// --- 2. MIXINY (Znovupoužitelný kód) ---
+@mixin card-base {
+  background: $white;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  padding: 1.5rem;
+  border: 1px solid $border;
+}
+
+@mixin transition-standard {
+  transition: all $transition;
+}
+
+// --- 3. RESET A ZÁKLADNÍ NASTAVENÍ ---
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: $bg;
+  color: $text;
+  line-height: 1.6;
+}
+
+// --- 4. HEADER & NAVIGACE ---
+header {
+  background: $white;
+  border-bottom: 3px solid $primary;
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $secondary;
+    text-decoration: none;
+    span { color: $primary; }
+  }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+
+    li {
+      margin-left: 1.5rem;
+      a {
+        text-decoration: none;
+        color: $secondary;
+        font-weight: 600;
+        @include transition-standard;
+        &:hover { color: $primary; }
+      }
+    }
+  }
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    nav ul {
+      margin-top: 1rem;
+      li { margin: 0 0.5rem; }
+    }
+  }
+}
+
+// --- 5. HERO SEKCE ---
+.hero {
+  background: $secondary;
+  color: $white;
+  padding: 4rem 5%;
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    @media (max-width: $mobile) { font-size: 1.8rem; }
+  }
+
+  p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+// --- 6. HLAVNÍ LAYOUT ---
+.container {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: 1fr;
+  }
+  
+  .ad-space {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px dashed #cbd5e0;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column; /* Aby šla ikona nad text */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    color: #4a5568;
+    font-size: 0.95rem;
+    position: relative;
+    min-height: 280px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.02);
+}
+
+/* Efekt při přejetí myší - box se mírně zvýrazní */
+.ad-space:hover {
+    border-color: #27ae60;
+    background: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Vložení ikony (hvězdičky) přes CSS */
+.ad-space::after {
+    content: "⭐";
+    font-size: 2rem;
+    margin-bottom: 15px;
+    display: block;
+    animation: pulse 2s infinite;
+}
+
+/* Hlavní text tipu */
+.ad-space::before {
+    content: "TIP: Přidejte si Podtrženo.cz do záložek (Ctrl+D), ať máte finanční kalkulačky vždy po ruce.";
+    font-weight: 700;
+    line-height: 1.5;
+    max-width: 200px; /* Text se hezky zalomí */
+}
+
+/* Jemná animace pro hvězdičku */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+}
+
+// --- 7. KARTY NÁSTROJŮ ---
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+
+  .card {
+    @include card-base;
+    text-decoration: none;
+    color: inherit;
+    @include transition-standard;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: $primary;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      color: $primary;
+      margin-bottom: 1rem;
+      stroke-width: 2px;
+    }
+
+    h3 {
+      margin-bottom: 0.5rem;
+      color: $secondary;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: $text-light;
+      flex-grow: 1;
+    }
+  }
+}
+
+// --- 8. SIDEBAR & WIDGETY ---
+aside {
+  .market-widget {
+    @include card-base;
+    margin-bottom: 1.5rem;
+
+    h4 {
+      margin-bottom: 1rem;
+      border-bottom: 2px solid $bg;
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      color: $secondary;
+    }
+
+    .market-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+      font-weight: bold;
+
+      .price-up {
+        color: $primary;
+      }
+    }
+  }
+}
+
+// --- 9. REKLAMNÍ PLOCHY ---
+.ad-space {
+  background: #ebebeb;
+  border: 2px dashed #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 0.8rem;
+  min-height: 250px;
+  margin: 1.5rem 0;
+  border-radius: $radius;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+// --- 10. FOOTER ---
+// --- 10. FOOTER (Finální oprava pro Lighthouse) ---
+footer {
+  background: $secondary; // Tvoje tmavě modrá #1a2b3c
+  color: #f8fafc;        // Velmi světlá šedá (téměř bílá) - výborný kontrast
+  padding: 4rem 5% 1.5rem;
+  margin-top: 4rem;
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+
+    h4 {
+      color: $primary; 
+      margin-bottom: 1.2rem;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    p {
+      color: #e2e8f0; // Světlá břidlicová - jasně čitelná
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    a {
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      color: #38bdf8; // Jasná nebeská modrá - perfektní na tmavém podkladu
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid transparent;
+      @include transition-standard;
+
+      &:hover { 
+        color: #ffffff; 
+        border-bottom: 1px solid #38bdf8;
+      }
+    }
+  }
+
+  .footer-bottom {
+    text-align: center;
+    border-top: 1px solid #334155; // Decentní linka
+    padding-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #cbd5e0; // Tmavší světle šedá - ZDE BYL PROBLÉM, nyní má kontrast přes 7:1
+    font-weight: 500;
+    opacity: 1; // ZRUŠENO OPACITY, které rozmazávalo kontrast
+  }
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+  cursor: help;
+  display: flex;
+  align-items: center;
+
+  .tooltip-icon {
+    width: 18px;
+    height: 18px;
+    color: $text-light;
+    opacity: 0.6;
+    &:hover { opacity: 1; color: $primary; }
+  }
+
+  .tooltip-text {
+    visibility: hidden;
+    width: 220px;
+    background-color: $secondary;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%; // Zobrazí se nad ikonou
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+    font-weight: normal;
+    line-height: 1.4;
+    box-shadow: $shadow;
+
+    // Šipka tooltipu
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: $secondary transparent transparent transparent;
+    }
+  }
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+.disclaimer-footer {
+            background: #f8f9fa;
+            padding: 1.5rem 5%;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }

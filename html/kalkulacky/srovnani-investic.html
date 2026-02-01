@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Srovnání: Investice vs. Spoření | Podtrženo.cz</title>
+    <meta name="description" content="Srovnejte výnosy běžného účtu, spoření a investic v horizontu 10 let. Podívejte se, jaký rozdíl v majetku udělá síla složeného úročení.">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.png">
+    <link rel="apple-touch-icon" href="../../favicon.png">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 1.5rem; }
+        
+        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
+        .form-label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+        
+        .input-main { width: 100%; padding: 1rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .input-main:focus { border-color: #15803d; outline: none; }
+        
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; display: none; }
+        .result-card { padding: 1.5rem; border-radius: 12px; text-align: center; border: 2px solid transparent; transition: transform 0.3s; }
+        .result-card:hover { transform: translateY(-5px); }
+        
+        .result-card.low { background: #fff5f5; border-color: #feb2b2; }
+        .result-card.mid { background: #eff6ff; border-color: #bfdbfe; }
+        .result-card.high { background: #f0fdf4; border-color: #bbf7d0; }
+
+        .res-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #334155; margin-bottom: 0.5rem; display: block; }
+        .res-amount { font-size: 1.5rem; font-weight: 900; color: #0f172a; display: block; margin-bottom: 0.5rem; }
+        .res-note { font-size: 0.8rem; color: #475569; line-height: 1.3; font-weight: 500; }
+
+        /* ACCESSIBILITY OPRAVA: Tmavší zelená pro tlačítko (Contrast AA) */
+        .btn-compare { background: #15803d; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
+        .btn-compare:hover { background: #166534; }
+
+        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
+        .disclaimer-footer {
+            background-color: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: #1e293b; 
+            text-align: center;
+            line-height: 1.6;
+        }
+        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
+        .disclaimer-footer strong { color: #0f172a; }
+
+        footer {
+            background: #1a2b3c;
+            color: #f8fafc;
+            padding: 2.5rem 5%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../../index.html" class="logo"><span>_</span>Podtrženo.cz</a>
+    <nav>
+        <ul>
+            <li><a href="../../index.html#kalkulacky">Kalkulačky</a></li>
+            <li><a href="../investice.html">Investice</a></li>
+            <li><a href="../krypto.html">Krypto & Akcie</a></li>
+            <li><a href="../kurzy.html">Kurzy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <main>
+        <h1>Srovnání investic a spoření</h1>
+        <p style="margin-bottom: 2rem; color: #334155; font-weight: 500;">Zadejte částku a podívejte se, jaký rozdíl udělá 10 let u různých způsobů uložení peněz.</p>
+
+        <div class="calc-card">
+            <div class="input-group">
+                <label class="form-label" for="base-amount">Částka k uložení (Kč)</label>
+                <input type="number" id="base-amount" class="input-main" value="100000">
+            </div>
+            
+            <button class="btn-compare" onclick="runComparison()">Porovnat výsledky po 10 letech</button>
+
+            <div id="comp-grid" class="comparison-grid">
+                <div class="result-card low">
+                    <span class="res-title">Běžný účet (0 %)</span>
+                    <span id="res-cash" class="res-amount">0 Kč</span>
+                    <span class="res-note">Při 3% inflaci bude reálná hodnota vašich peněz jen cca 74 000 Kč.</span>
+                </div>
+
+                <div class="result-card mid">
+                    <span class="res-title">Spořicí účet (4 %)</span>
+                    <span id="res-bank" class="res-amount">0 Kč</span>
+                    <span class="res-note">Peníze jsou v bezpečí a úrok částečně kryje dopady inflace.</span>
+                </div>
+
+                <div class="result-card high">
+                    <span class="res-title">Investice (8 %)</span>
+                    <span id="res-invest" class="res-amount">0 Kč</span>
+                    <span class="res-note">Historický průměr akciového trhu. Síla složeného úročení v praxi.</span>
+                </div>
+
+                <p style="grid-column: 1 / -1; font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; text-align: center;">
+                    * Minulé výnosy nejsou zárukou budoucích zisků. Investování na kapitálových trzích je spojeno s rizikem. Výpočet je pouze orientační.
+                </p>
+            </div>
+        </div>
+
+        <article style="margin-top: 4rem;">
+            <h2>Proč peníze nenechat pod polštářem?</h2>
+            <p>Hlavním důvodem je <strong>inflace</strong>. Pokud peníze nezhodnocujete, každý rok si za ně koupíte méně zboží a služeb. Zatímco spořicí účty jsou skvělé pro rezervu, pro budování bohatství jsou nezbytné investice do aktiv.</p>
+            
+            
+        </article>
+    </main>
+
+    <aside>
+        <div class="ad-space"></div>
+    </aside>
+</div>
+
+<div class="disclaimer-footer">
+    <strong>Důležité upozornění:</strong>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani investiční poradenství. Investování na kapitálových trzích zahrnuje rizika.</p>
+</div>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
+    </div>
+</footer>
+
+<script>
+    function runComparison() {
+        const p = parseFloat(document.getElementById('base-amount').value);
+        if (isNaN(p) || p <= 0) return;
+
+        const years = 10;
+        const fmt = (num) => Math.round(num).toLocaleString('cs-CZ') + ' Kč';
+
+        const valCash = p; 
+        const valBank = p * Math.pow(1 + 0.04, years); 
+        const valInvest = p * Math.pow(1 + 0.08, years); 
+
+        document.getElementById('res-cash').innerText = fmt(valCash);
+        document.getElementById('res-bank').innerText = fmt(valBank);
+        document.getElementById('res-invest').innerText = fmt(valInvest);
+
+        document.getElementById('comp-grid').style.display = 'grid';
+        document.getElementById('comp-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+</script>
+</body>
+</html>
