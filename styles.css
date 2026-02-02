@@ -327,6 +327,20 @@ footer .footer-bottom {
   border-style: solid;
   border-color: #1a2b3c transparent transparent transparent;
 }
+.tooltip .tooltip-text--slevaPoplatnika {
+  left: 50%;
+  transform: translateX(-70%);
+}
+.tooltip .tooltip-text--slevaPoplatnika::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 70%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #1a2b3c transparent transparent transparent;
+}
 .tooltip:hover .tooltip-text {
   visibility: visible;
   opacity: 1;

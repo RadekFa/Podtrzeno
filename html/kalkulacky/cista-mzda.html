@@ -9,7 +9,6 @@
     <link rel="icon" type="image/svg+xml" href="../../favicon.png">
     <link rel="apple-touch-icon" href="../../favicon.png">
     <style>
-        /* Specifické styly pro vnitřek kalkulačky */
         .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
         .input-main { width: 100%; padding: 1rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: #1e293b; }
@@ -18,17 +17,14 @@
         .check-box-ui { display: flex; align-items: center; background: #f9fafb; padding: 1rem; border-radius: 8px; cursor: pointer; margin-bottom: 1.5rem; color: #1e293b; font-weight: 600; }
         .check-box-ui input { width: 20px; height: 20px; margin-right: 12px; }
         
-        /* OPRAVA KONTRASTU: Tmavší zelená pro bílý text na tlačítku */
         .btn-calc { background: #15803d; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
         .btn-calc:hover { background: #166534; }
         
         .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #f0fdf4; border: 2px solid #15803d; border-radius: 12px; text-align: center; }
         
-        /* OPRAVA KONTRASTU: Výraznější barvy pro výsledky */
         .result-breakdown strong { color: #0f172a; font-weight: 800; }
-        .negative strong { color: #b91c1c; } /* Tmavě červená pro odvody */
+        .negative strong { color: #b91c1c; } 
 
-        /* OPRAVA KONTRASTU: Tmavší šedá pro disclaimer */
         .disclaimer-footer {
             background-color: #f1f5f9;
             border-top: 1px solid #e2e8f0;
@@ -84,7 +80,7 @@
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
-                    <span class="tooltip-text">Základní daňová sleva ve výši 2 570 Kč měsíčně.</span>
+                    <span class="tooltip-text tooltip-text--slevaPoplatnika">Základní daňová sleva ve výši 2 570 Kč měsíčně.</span>
                 </div>
             </label>
 
