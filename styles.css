@@ -93,10 +93,6 @@ header nav ul li a:hover {
   padding: 2rem 5%;
   max-width: 1400px;
   margin: 0 auto;
-  /* Efekt při přejetí myší - box se mírně zvýrazní */
-  /* Vložení ikony (hvězdičky) přes CSS */
-  /* Hlavní text tipu */
-  /* Jemná animace pro hvězdičku */
 }
 @media (max-width: 900px) {
   .container {
@@ -120,10 +116,16 @@ header nav ul li a:hover {
   transition: all 0.3s ease;
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.02);
 }
+.container {
+  /* Efekt při přejetí myší - box se mírně zvýrazní */
+}
 .container .ad-space:hover {
   border-color: #27ae60;
   background: #ffffff;
   transform: translateY(-2px);
+}
+.container {
+  /* Vložení ikony (hvězdičky) přes CSS */
 }
 .container .ad-space::after {
   content: "⭐";
@@ -132,11 +134,17 @@ header nav ul li a:hover {
   display: block;
   animation: pulse 2s infinite;
 }
+.container {
+  /* Hlavní text tipu */
+}
 .container .ad-space::before {
   content: "TIP: Přidejte si Podtrženo.cz do záložek (Ctrl+D), ať máte finanční kalkulačky vždy po ruce.";
   font-weight: 700;
   line-height: 1.5;
   max-width: 200px; /* Text se hezky zalomí */
+}
+.container {
+  /* Jemná animace pro hvězdičku */
 }
 @keyframes pulse {
   0% {

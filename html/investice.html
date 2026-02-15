@@ -10,11 +10,10 @@
     <link rel="icon" type="image/svg+xml" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <style>
-        .invest-hero { background: linear-gradient(135deg, #1a2b3c 0%, #27ae60 100%); color: white; padding: 4rem 5%; border-radius: 0 0 30px 30px; margin-bottom: 3rem; }
+        .invest-hero { background: linear-gradient(135deg, #1a2b3c 0%, #27ae60 100%); color: white; padding: 4rem 5%; border-radius: 0 0 30px 30px; margin-bottom: 3rem; text-align: center; }
+        
         .comparison-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .comparison-table th, .comparison-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid #eee; }
-        
-        /* SEO/ACCESSIBILITY OPRAVA: Kontrast záhlaví tabulky */
         .comparison-table th { background: #f1f5f9; color: #0f172a; font-weight: 800; }
         
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
@@ -25,54 +24,38 @@
         .calc-link:hover { border-color: #27ae60; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .calc-link svg { margin-right: 15px; color: #27ae60; }
 
-        /* ACCESSIBILITY OPRAVA: Kontrast v patičce */
-        .disclaimer-footer {
-            background: #f1f5f9;
-            padding: 2rem 5%;
-            font-size: 0.875rem;
-            color: #1e293b; /* Tmavě břidlicová pro čitelnost */
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-            line-height: 1.6;
+        .disclaimer-footer { background: #f1f5f9; padding: 2rem 5%; font-size: 0.875rem; color: #1e293b; text-align: center; border-top: 1px solid #e2e8f0; line-height: 1.6; }
+        footer { background: #1a2b3c; color: #f8fafc; padding: 2.5rem 5%; text-align: center; font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            .comparison-table th, .comparison-table td { padding: 8px; font-size: 0.8rem; }
+            .invest-hero { padding: 2rem 5%; }
         }
 
-        footer {
-            background: #1a2b3c;
-            color: #f8fafc;
-            padding: 2.5rem 5%;
-            text-align: center;
-            font-size: 0.95rem;
+        /* Cookie lišta CSS */
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
         }
-       @media (max-width: 600px) {
-    /* Zrušíme fixní šířky a dovolíme tabulce se smrštit */
-    .rates-table-container, .comparison-table-wrapper {
-        padding: 10px 5px !important;
-        width: 100% !important;
-        overflow: hidden !important;
-    }
-
-    .rates-table, .comparison-table {
-        min-width: 0 !important; /* Zrušení předchozího limitu */
-        width: 100% !important;
-        table-layout: fixed; /* Důležité: sloupce se musí rozdělit o dostupné místo */
-    }
-
-    .rates-table th, .rates-table td,
-    .comparison-table th, .comparison-table td {
-        padding: 8px 4px !important;
-        font-size: 0.75rem !important; /* Menší písmo pro mobil */
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
-
-    /* Specifické nastavení šířek sloupců pro kurzy, aby čísla měla místo */
-    .rates-table th:nth-child(1), .rates-table td:nth-child(1) { width: 30%; }
-    .rates-table th:nth-child(2), .rates-table td:nth-child(2) { width: 15%; }
-    .rates-table th:nth-child(3), .rates-table td:nth-child(3) { width: 30%; }
-    .rates-table th:nth-child(4), .rates-table td:nth-child(4) { width: 25%; }
-}
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
     </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
+
 <body>
 
 <header>
@@ -95,44 +78,46 @@
 <div class="container" style="grid-template-columns: 1fr;">
     <main>
         <h2>Proč investovat a nenechat peníze "ležet"?</h2>
-        <p>Největším nepřítelem vašich úspor je <strong>inflace</strong>. Pokud máte peníze na běžném účtu s úrokem 0,01 %, každý rok si za ně koupíte přibližně o několik procent méně věcí. Investování je cesta, jak hodnotu peněz dlouhodobě chránit.</p>
+        <p>Největším nepřítelem vašich úspor je <strong>inflace</strong>. Pokud máte peníze na běžném účtu, každý rok jejich reálná hodnota klesá. Investování je cesta, jak hodnotu peněz dlouhodobě chránit a budovat bohatství.</p>
 
         
 
         <h3>Srovnání: Spoření vs. Investování</h3>
         <div class="comparison-table-wrapper">
-        <table class="comparison-table">
-            <thead>
-                <tr>
-                    <th>Charakteristika</th>
-                    <th>Spořicí účet</th>
-                    <th>Investování (Akcie/ETF)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Riziko</strong></td>
-                    <td>Minimální (pojištěno)</td>
-                    <td>Kolísavé (tržní riziko)</td>
-                </tr>
-                <tr>
-                    <td><strong>Potenciální výnos</strong></td>
-                    <td>Nízký</td>
-                    <td>Vyšší (7–9 % p.a.)</td>
-                </tr>
-                <tr>
-                    <td><strong>Likvidita</strong></td>
-                    <td>Okamžitá</td>
-                    <td>Dny (prodej aktiv)</td>
-                </tr>
-                <tr>
-                    <td><strong>Doporučený horizont</strong></td>
-                    <td>Krátkodobý</td>
-                    <td>Dlouhodobý (5+ let)</td>
-                </tr>
-            </tbody>
-        </table>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Charakteristika</th>
+                        <th>Spořicí účet</th>
+                        <th>Investování (Akcie/ETF)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Riziko</strong></td>
+                        <td>Minimální (pojištěno)</td>
+                        <td>Kolísavé (tržní riziko)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Potenciální výnos</strong></td>
+                        <td>Nízký (cca 2–4 %)</td>
+                        <td>Vyšší (7–9 % p.a.)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Likvidita</strong></td>
+                        <td>Okamžitá</td>
+                        <td>Dny (prodej aktiv)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Doporučený horizont</strong></td>
+                        <td>Krátkodobý</td>
+                        <td>Dlouhodobý (5+ let)</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
+        
 
         <div class="feature-grid">
             <section class="feature-card">
@@ -173,9 +158,53 @@
 
 <footer>
     <div class="footer-bottom">
-        &copy; 2026 podtrzeno.cz | Investování zahrnuje riziko kolísání hodnoty.
+        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
     </div>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
+<script>
+    /* --- COOKIE LOGIKA --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+</script>
 </body>
 </html>

@@ -6,53 +6,51 @@
     <title>Kalkulačka DPH 2026 | Podtrženo.cz</title>
     <meta name="description" content="Rychlý výpočet DPH pro rok 2026. Snadno připočtěte daň k základu nebo vypočítejte DPH z celkové ceny online. Podpora pro sazby 21 % a 12 %.">
     
-    
     <link rel="stylesheet" href="../../styles.css">
     <link rel="icon" type="image/svg+xml" href="../../favicon.png">
     <link rel="apple-touch-icon" href="../../favicon.png">
+    
     <style>
         .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .input-group { margin-bottom: 1.2rem; }
-        
-        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
         .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
-        
         .input-main { width: 100%; padding: 0.8rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
         .input-main:focus { border-color: #6b21a8; outline: none; }
         
-        .radio-group { display: flex; gap: 15px; margin-bottom: 1.5rem; background: #f9fafb; padding: 1rem; border-radius: 8px; }
+        .radio-group { display: flex; gap: 15px; margin-bottom: 1.5rem; background: #f9fafb; padding: 1rem; border-radius: 8px; flex-wrap: wrap; }
         .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #1e293b; }
         
-        /* ACCESSIBILITY OPRAVA: Tmavší fialová pro tlačítko (splňuje kontrast AA vůči bílé) */
         .btn-calc { background: #6b21a8; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 1rem; font-size: 1.1rem; }
         .btn-calc:hover { background: #581c87; }
         
-        /* ACCESSIBILITY OPRAVA: Barvy výsledků */
         .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #faf5ff; border: 2px solid #6b21a8; border-radius: 12px; text-align: center; }
         .purple-val { font-size: 2.5rem; font-weight: 900; color: #6b21a8; }
-        .res-box strong { color: #0f172a; font-weight: 800; }
         .vat-text { color: #6b21a8; font-weight: 800; }
 
-        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
-        .disclaimer-footer {
-            background-color: #f1f5f9;
-            border-top: 1px solid #e2e8f0;
-            padding: 2rem 5%;
-            margin-top: 3rem;
-            font-size: 0.875rem;
-            color: #1e293b; 
-            text-align: center;
-            line-height: 1.6;
+        .disclaimer-footer { background-color: #f1f5f9; border-top: 1px solid #e2e8f0; padding: 2rem 5%; margin-top: 3rem; font-size: 0.875rem; color: #1e293b; text-align: center; line-height: 1.6; }
+        
+        /* Cookie lišta CSS */
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
         }
-        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
-
-        footer {
-            background: #1a2b3c;
-            color: #f8fafc;
-            padding: 2.5rem 5%;
-            text-align: center;
-        }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
     </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
 <body>
 
@@ -101,31 +99,22 @@
                 <div class="result-breakdown" style="margin-top: 1.5rem; border-top: 2px solid #e9d5ff; padding-top: 1.2rem; text-align: left;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span>Základ daně (bez DPH):</span>
-                        <strong id="out-base"></strong>
+                        <strong id="out-base" style="color:#0f172a"></strong>
                     </div>
                     <div style="display: flex; justify-content: space-between;" class="vat-text">
                         <span>Samotná daň (DPH):</span>
                         <strong id="out-vat"></strong>
                     </div>
                 </div>
-
-                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
-                    * Výpočet je orientační. Konečná částka se může mírně lišit dle zvoleného zaokrouhlování podle zákona o DPH.
-                </p>
             </div>
         </div>
 
         <article style="margin-top: 4rem;">
             <h2>Sazby DPH v roce 2026</h2>
-            <p>V České republice platí od ledna 2024 dvě hlavní sazby DPH: základní <strong>21 %</strong> a snížená <strong>12 %</strong>. Snížená sazba sjednocuje dřívější kategorie a vztahuje se například na potraviny, vybrané léky či ubytovací služby.</p>
-            
+            <p>V České republice platí dvě hlavní sazby DPH: základní <strong>21 %</strong> a snížená <strong>12 %</strong>. Tato úprava sjednotila dřívější snížené sazby a zjednodušila daňový systém.</p>
             
         </article>
     </main>
-
-    <aside>
-        <div class="ad-space"></div>
-    </aside>
 </div>
 
 <div class="disclaimer-footer">
@@ -139,7 +128,51 @@
     </div>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
 <script>
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+
+    /* --- LOGIKA VÝPOČTU DPH --- */
     function calculateVAT() {
         const amount = parseFloat(document.getElementById('amount').value);
         const rateNode = document.querySelector('input[name="vat-rate"]:checked');
@@ -151,6 +184,8 @@
         const type = typeNode.value;
 
         let base, vat, total;
+
+        const fmt = (num) => num.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Kč';
 
         if (type === 'add') {
             base = amount;
@@ -164,10 +199,6 @@
             vat = total - base;
             document.getElementById('res-label').innerText = "Základ daně (bez DPH):";
             document.getElementById('main-result').innerText = fmt(base);
-        }
-
-        function fmt(num) {
-            return num.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Kč';
         }
 
         document.getElementById('out-base').innerText = fmt(base);

@@ -10,6 +10,34 @@
     <link rel="icon" type="image/svg+xml" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
     <script src="app.js" defer></script>
+
+    <style>
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
+        }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { 
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; 
+            font-weight: bold; transition: 0.3s; 
+        }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-accept:hover { background: #219150; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
+        .btn-decline:hover { background: #4e5e6e; color: white; }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
 <body>
 
@@ -108,24 +136,22 @@
                 <p>Podívejte se, o kolik více vyděláte investováním oproti spoření.</p>
             </a>
         </div>
-        <!-- REKLAMA -->
-        <!-- <div class="ad-space" style="margin-top: 2rem;"></div> -->
     </main>
 
     <aside>
         <div class="market-widget">
             <h4>Ceny krypto měn (CZK)</h4>
             <div id="crypto-list">
-                <div class="market-item"><span>Bitcoin</span> <strong>... Kč</strong></div>
-                <div class="market-item"><span>Ethereum</span> <strong>... Kč</strong></div>
-                <div class="market-item"><span>Solana</span> <strong>... Kč</strong></div>
+                <div class="market-item"><span>Bitcoin</span> <strong id="btc-price">... Kč</strong></div>
+                <div class="market-item"><span>Ethereum</span> <strong id="eth-price">... Kč</strong></div>
+                <div class="market-item"><span>Solana</span> <strong id="sol-price">... Kč</strong></div>
             </div>
         </div>
 
         <div class="market-widget">
-            <h4>Kurzy ČNB</h4>
-            <div class="market-item"><span>EUR / CZK</span> <strong id="eur-price" style="color:#1e293b">25.30</strong></div>
-            <div class="market-item"><span>USD / CZK</span> <strong id="usd-price" style="color:#1e293b">23.10</strong></div>
+            <h4>Kurzy ČNB (střed)</h4>
+            <div class="market-item"><span>EUR / CZK</span> <strong id="eur-price" style="color:#27ae60">...</strong></div>
+            <div class="market-item"><span>USD / CZK</span> <strong id="usd-price" style="color:#27ae60">...</strong></div>
         </div>
 
         <div class="ad-space" style="min-height: 450px;"></div>
@@ -149,49 +175,100 @@
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; 2026 podtrzeno.cz | Výpočty jsou orientační. | Data: CoinGecko API. a ČNB.
+        &copy; 2026 podtrzeno.cz | Výpočty jsou orientační. | Data: CoinGecko API a ČNB.
     </div>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
 <script>
-    function renderData(data) {
-        const list = document.getElementById('crypto-list');
-        if (!list || !data || !data.bitcoin) return;
-        const html = `
-            <div class="market-item"><span>Bitcoin</span> <strong>${Math.round(data.bitcoin.czk).toLocaleString('cs-CZ')} Kč</strong></div>
-            <div class="market-item"><span>Ethereum</span> <strong>${Math.round(data.ethereum.czk).toLocaleString('cs-CZ')} Kč</strong></div>
-            <div class="market-item"><span>Solana</span> <strong>${Math.round(data.solana.czk).toLocaleString('cs-CZ')} Kč</strong></div>
-        `;
-        requestAnimationFrame(() => { list.innerHTML = html; });
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
     }
 
-    async function fetchMarketData() {
-        const cacheKey = 'marketData';
-        const cacheTimeKey = 'marketDataTime';
-        const cachedData = localStorage.getItem(cacheKey);
-        const cachedTime = localStorage.getItem(cacheTimeKey);
-        const now = Date.now();
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
 
-        if (cachedData && cachedTime && (now - cachedTime < 300000)) {
-            renderData(JSON.parse(cachedData));
-            return;
+    window.addEventListener('load', () => {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
         }
+    });
 
+    /* --- LOGIKA KRYPTOMĚN (CoinGecko) --- */
+    function renderCrypto(data) {
+        if (!data) return;
+        if(data.bitcoin) document.getElementById('btc-price').innerText = Math.round(data.bitcoin.czk).toLocaleString('cs-CZ') + " Kč";
+        if(data.ethereum) document.getElementById('eth-price').innerText = Math.round(data.ethereum.czk).toLocaleString('cs-CZ') + " Kč";
+        if(data.solana) document.getElementById('sol-price').innerText = Math.round(data.solana.czk).toLocaleString('cs-CZ') + " Kč";
+    }
+
+    async function fetchCrypto() {
         try {
             const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=czk');
             if (res.ok) {
                 const data = await res.json();
-                localStorage.setItem(cacheKey, JSON.stringify(data));
-                localStorage.setItem(cacheTimeKey, now.toString());
-                renderData(data);
+                renderCrypto(data);
             }
-        } catch (e) { console.warn("API Error"); }
+        } catch (e) { console.warn("Krypto API Error"); }
     }
 
-    window.addEventListener('load', () => {
-        fetchMarketData();
-        setInterval(fetchMarketData, 60000);
+    /* --- LOGIKA KURZŮ MĚN (ČNB přes PHP most) --- */
+    async function fetchCNB() {
+        try {
+            const res = await fetch('get_kurzy.php');
+            if (!res.ok) return;
+            const json = await res.json();
+            const lines = json.text.split('\n');
+            
+            lines.forEach(line => {
+                const parts = line.split('|');
+                if (parts.length < 5) return;
+                
+                if (parts[3] === 'EUR') {
+                    document.getElementById('eur-price').innerText = parts[4].replace(',', '.') + " Kč";
+                }
+                if (parts[3] === 'USD') {
+                    document.getElementById('usd-price').innerText = parts[4].replace(',', '.') + " Kč";
+                }
+            });
+        } catch (e) { console.warn("ČNB Error - pravděpodobně chybí get_kurzy.php"); }
+    }
+
+    // Spuštění po načtení
+    window.addEventListener('DOMContentLoaded', () => {
+        fetchCrypto();
+        fetchCNB();
     });
 </script>
+
 </body>
 </html>

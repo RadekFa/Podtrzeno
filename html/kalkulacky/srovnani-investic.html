@@ -5,18 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Srovnání: Investice vs. Spoření | Podtrženo.cz</title>
     <meta name="description" content="Srovnejte výnosy běžného účtu, spoření a investic v horizontu 10 let. Podívejte se, jaký rozdíl v majetku udělá síla složeného úročení.">
+    
     <link rel="stylesheet" href="../../styles.css">
     <link rel="icon" type="image/svg+xml" href="../../favicon.png">
     <link rel="apple-touch-icon" href="../../favicon.png">
     
-    <link rel="stylesheet" href="../../styles.css">
     <style>
         .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .input-group { margin-bottom: 1.5rem; }
-        
-        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
         .form-label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
-        
         .input-main { width: 100%; padding: 1rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
         .input-main:focus { border-color: #15803d; outline: none; }
         
@@ -32,31 +29,33 @@
         .res-amount { font-size: 1.5rem; font-weight: 900; color: #0f172a; display: block; margin-bottom: 0.5rem; }
         .res-note { font-size: 0.8rem; color: #475569; line-height: 1.3; font-weight: 500; }
 
-        /* ACCESSIBILITY OPRAVA: Tmavší zelená pro tlačítko (Contrast AA) */
         .btn-compare { background: #15803d; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
         .btn-compare:hover { background: #166534; }
 
-        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
-        .disclaimer-footer {
-            background-color: #f1f5f9;
-            border-top: 1px solid #e2e8f0;
-            padding: 2rem 5%;
-            margin-top: 3rem;
-            font-size: 0.875rem;
-            color: #1e293b; 
-            text-align: center;
-            line-height: 1.6;
+        .disclaimer-footer { background-color: #f1f5f9; border-top: 1px solid #e2e8f0; padding: 2rem 5%; margin-top: 3rem; font-size: 0.875rem; color: #1e293b; text-align: center; line-height: 1.6; }
+        
+        /* Cookie lišta CSS */
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
         }
-        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
-        .disclaimer-footer strong { color: #0f172a; }
-
-        footer {
-            background: #1a2b3c;
-            color: #f8fafc;
-            padding: 2.5rem 5%;
-            text-align: center;
-        }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
     </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
 <body>
 
@@ -89,43 +88,38 @@
                 <div class="result-card low">
                     <span class="res-title">Běžný účet (0 %)</span>
                     <span id="res-cash" class="res-amount">0 Kč</span>
-                    <span class="res-note">Při 3% inflaci bude reálná hodnota vašich peněz jen cca 74 000 Kč.</span>
+                    <span class="res-note">Nominální hodnota je stejná, ale reálná kupní síla peněz klesne kvůli inflaci.</span>
                 </div>
 
                 <div class="result-card mid">
                     <span class="res-title">Spořicí účet (4 %)</span>
                     <span id="res-bank" class="res-amount">0 Kč</span>
-                    <span class="res-note">Peníze jsou v bezpečí a úrok částečně kryje dopady inflace.</span>
+                    <span class="res-note">Bezpečné uložení. Úrok pomáhá chránit hodnotu peněz před inflací.</span>
                 </div>
 
                 <div class="result-card high">
                     <span class="res-title">Investice (8 %)</span>
                     <span id="res-invest" class="res-amount">0 Kč</span>
-                    <span class="res-note">Historický průměr akciového trhu. Síla složeného úročení v praxi.</span>
+                    <span class="res-note">Odhadovaný dlouhodobý průměr trhu. Síla času a složeného úročení.</span>
                 </div>
 
                 <p style="grid-column: 1 / -1; font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; text-align: center;">
-                    * Minulé výnosy nejsou zárukou budoucích zisků. Investování na kapitálových trzích je spojeno s rizikem. Výpočet je pouze orientační.
+                    * Výpočet je orientační. Investování na trzích zahrnuje riziko kolísání hodnoty.
                 </p>
             </div>
         </div>
 
         <article style="margin-top: 4rem;">
-            <h2>Proč peníze nenechat pod polštářem?</h2>
-            <p>Hlavním důvodem je <strong>inflace</strong>. Pokud peníze nezhodnocujete, každý rok si za ně koupíte méně zboží a služeb. Zatímco spořicí účty jsou skvělé pro rezervu, pro budování bohatství jsou nezbytné investice do aktiv.</p>
-            
+            <h2>Proč peníze nenechat jen tak?</h2>
+            <p>Hlavním nepřítelem úspor je <strong>inflace</strong>. Zatímco spořicí účty jsou skvělé pro krátkodobou rezervu, pro budování majetku je klíčové využívat investiční nástroje, které historicky inflaci překonávají.</p>
             
         </article>
     </main>
-
-    <aside>
-        <div class="ad-space"></div>
-    </aside>
 </div>
 
 <div class="disclaimer-footer">
     <strong>Důležité upozornění:</strong>
-    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani investiční poradenství. Investování na kapitálových trzích zahrnuje rizika.</p>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační.</p>
 </div>
 
 <footer>
@@ -134,7 +128,51 @@
     </div>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
 <script>
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+
+    /* --- LOGIKA POROVNÁNÍ --- */
     function runComparison() {
         const p = parseFloat(document.getElementById('base-amount').value);
         if (isNaN(p) || p <= 0) return;

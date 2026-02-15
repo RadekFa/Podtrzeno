@@ -5,55 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulačka finanční nezávislosti (FIRE) | Podtrženo.cz</title>
     <meta name="description" content="Spočítejte si svou cílovou částku pro finanční nezávislost. Zjistěte, kolik musíte mít naspořeno, abyste mohli žít z renty podle pravidla 4 %.">
+    
     <link rel="stylesheet" href="../../styles.css">
     <link rel="icon" type="image/svg+xml" href="../../favicon.png">
     <link rel="apple-touch-icon" href="../../favicon.png">
     
-    <link rel="stylesheet" href="../../styles.css">
     <style>
         .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .input-group { margin-bottom: 1.2rem; }
-        
-        /* ACCESSIBILITY OPRAVA: Kontrast labelů */
         .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
-        
         .input-main { width: 100%; padding: 0.8rem; border: 2px solid #f3f4f6; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #1e293b; }
         .input-main:focus { border-color: #d91d2a; outline: none; }
         
-        /* ACCESSIBILITY OPRAVA: Sytější červená pro tlačítko a badge (Contrast AA) */
         .btn-calc { background: #d91d2a; color: white; border: none; padding: 1.2rem; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 1rem; font-size: 1.1rem; }
         .btn-calc:hover { background: #b91c1c; }
         
         .badge { background: #d91d2a; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; margin-left: 10px; text-transform: uppercase; font-weight: 800; }
-        
         .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #fff5f6; border: 2px solid #d91d2a; border-radius: 12px; text-align: center; }
         .fire-val { font-size: 2.5rem; font-weight: 900; color: #d91d2a; }
         
-        /* ACCESSIBILITY OPRAVA: Čitelnost výsledků a pomocných textů */
-        .res-box strong { color: #0f172a; font-weight: 800; }
         .remaining-text { color: #d91d2a; font-weight: 800; }
         .input-hint { color: #475569; font-size: 0.85rem; display: block; margin-top: 0.25rem; font-weight: 500; }
 
-        /* ACCESSIBILITY OPRAVA: Čitelný disclaimer */
-        .disclaimer-footer {
-            background-color: #f1f5f9;
-            border-top: 1px solid #e2e8f0;
-            padding: 2rem 5%;
-            margin-top: 3rem;
-            font-size: 0.875rem;
-            color: #1e293b; 
-            text-align: center;
-            line-height: 1.6;
+        .disclaimer-footer { background-color: #f1f5f9; border-top: 1px solid #e2e8f0; padding: 2rem 5%; margin-top: 3rem; font-size: 0.875rem; color: #1e293b; text-align: center; line-height: 1.6; }
+        
+        /* Cookie lišta CSS */
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
         }
-        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
-
-        footer {
-            background: #1a2b3c;
-            color: #f8fafc;
-            padding: 2.5rem 5%;
-            text-align: center;
-        }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
     </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
 <body>
 
@@ -84,9 +81,9 @@
                 <input type="number" id="current-savings" class="input-main" value="100000">
             </div>
             <div class="input-group">
-                <label class="form-label" for="return-rate">Očekávaný roční výnos (%)</label>
+                <label class="form-label" for="return-rate">Míra bezpečného výběru (%)</label>
                 <input type="number" id="return-rate" class="input-main" value="4" step="0.1">
-                <span class="input-hint">Standardně se používá 4 % (bezpečný výběr).</span>
+                <span class="input-hint">Pravidlo 4 % (Trinity Study) je zlatý standard pro rentu.</span>
             </div>
 
             <button class="btn-calc" onclick="calculateFIRE()">Vypočítat cílovou částku</button>
@@ -98,36 +95,27 @@
                 <div class="result-breakdown" style="margin-top: 1.5rem; border-top: 2px solid #ffdadc; padding-top: 1.2rem; text-align: left;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span>Roční rozpočet:</span>
-                        <strong id="out-annual"></strong>
+                        <strong id="out-annual" style="color:#0f172a"></strong>
                     </div>
                     <div style="display: flex; justify-content: space-between;" class="remaining-text">
                         <span>Zbývá naspořit:</span>
                         <strong id="out-remaining"></strong>
                     </div>
                 </div>
-
-                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
-                    * Výpočet je orientační. Investování na trzích zahrnuje riziko kolísání hodnoty. Budoucí výnosy nejsou zaručeny.
-                </p>
             </div>
         </div>
 
         <article style="margin-top: 4rem;">
             <h2>Co je to pravidlo 4 %?</h2>
-            <p>Pravidlo vychází ze studie Trinity. Říká, že pokud máte své peníze v portfoliu složeném z akcií a dluhopisů, můžete každý rok vybrat 4 % z celkové částky (upravené o inflaci), aniž byste svůj kapitál v horizontu 30 let vyčerpali.</p>
-            
+            <p>Pravidlo vychází ze studie Trinity. Říká, že pokud máte své peníze v portfoliu složeném z akcií a dluhopisů, můžete každý rok vybrat 4 % z celkové částky, aniž byste svůj kapitál v horizontu 30 let vyčerpali.</p>
             
         </article>
     </main>
-
-    <aside>
-        <div class="ad-space"></div>
-    </aside>
 </div>
 
 <div class="disclaimer-footer">
     <strong>Důležité upozornění:</strong>
-    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani investiční poradenství. Investování na kapitálových trzích zahrnuje rizika.</p>
+    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani investiční poradenství.</p>
 </div>
 
 <footer>
@@ -136,13 +124,57 @@
     </div>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
 <script>
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+
+    /* --- LOGIKA FIRE VÝPOČTU --- */
     function calculateFIRE() {
         const monthly = parseFloat(document.getElementById('target-renta').value);
         const current = parseFloat(document.getElementById('current-savings').value);
         const rate_val = parseFloat(document.getElementById('return-rate').value);
 
-        if (isNaN(monthly) || isNaN(rate_val) || rate_val === 0) return;
+        if (isNaN(monthly) || isNaN(rate_val) || rate_val <= 0) return;
 
         const rate = rate_val / 100;
         const annual = monthly * 12;

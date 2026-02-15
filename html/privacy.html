@@ -7,6 +7,29 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="icon" type="image/svg+xml" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
+
+    <style>
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
+        }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP', { 'anonymize_ip': true });
+    </script>
 </head>
 <body>
 
@@ -22,26 +45,71 @@
 <div class="container" style="grid-template-columns: 1fr; max-width: 800px;">
     <main>
         <h1>Ochrana soukromí</h1>
-        <p>Vážíme si vašeho soukromí. Na webu <strong>Podtrženo.cz</strong> přistupujeme k ochraně osobních údajů zodpovědně.</p>
+        <p>Vážíme si vašeho soukromí. Na webu <strong>Podtrženo.cz</strong> přistupujeme k ochraně osobních údajů zodpovědně a v souladu s platnou legislativou (GDPR).</p>
 
         <h3 style="margin-top: 2rem;">1. Sběr osobních údajů</h3>
-        <p>Tento web v současné době <strong>nesbírá žádné osobní údaje</strong>. Pro používání našich kalkulaček není vyžadována registrace, jméno ani e-mail. Veškeré výpočty probíhají ve vašem prohlížeči.</p>
+        <p>Tento web <strong>nesbírá žádné přímé osobní údaje</strong> jako jména, e-maily nebo telefonní čísla. Veškeré finanční výpočty probíhají anonymně přímo ve vašem prohlížeči a nikam se neukládají.</p>
 
-        <h3 style="margin-top: 2rem;">2. Cookies</h3>
-        <p>Web může používat pouze nezbytná technická cookies pro zajištění správného chodu stránek. V současné době nevyužíváme žádné analytické ani reklamní cookies třetích stran.</p>
+        <h3 style="margin-top: 2rem;">2. Analytické nástroje a Cookies</h3>
+        <p>Pro vylepšování našich kalkulaček používáme nástroj <strong>Google Analytics</strong>. Tento nástroj sbírá anonymní data o návštěvnosti (např. které stránky jsou nejoblíbenější). Tyto údaje zpracováváme pouze na základě vašeho <strong>dobrovolného souhlasu</strong> uděleného prostřednictvím cookie lišty.</p>
+        <p>Web dále využívá nezbytná technická cookies (např. pro zapamatování vaší volby v cookie liště), která nevyžadují souhlas.</p>
 
         <h3 style="margin-top: 2rem;">3. Externí odkazy</h3>
-        <p>Naše stránky mohou obsahovat odkazy na jiné weby. Neneseme zodpovědnost za obsah ani zásady ochrany soukromí těchto externích stránek.</p>
+        <p>Naše stránky obsahují odkazy na zdroje třetích stran (např. CoinGecko nebo ČNB). Neneseme zodpovědnost za zásady ochrany soukromí těchto externích webů.</p>
         
-        <p style="margin-top: 3rem; font-size: 0.9rem; color: #666;">Poslední aktualizace: 23. ledna 2026</p>
+        <p style="margin-top: 3rem; font-size: 0.9rem; color: #666;">Poslední aktualizace: 15. února 2026</p>
     </main>
 </div>
 
 <footer>
     <div class="footer-bottom">
-        &copy; 2026 podtrzeno.cz
+        &copy; 2026 podtrzeno.cz | Transparentnost a soukromí.
     </div>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
+<script>
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+</script>
 </body>
 </html>

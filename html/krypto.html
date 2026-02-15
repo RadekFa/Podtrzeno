@@ -20,7 +20,29 @@
         .info-section { background: white; padding: 2.5rem; border-radius: 20px; border: 1px solid #eef2f3; height: 100%; }
         .btn-krypto { display: block; background: #8e44ad; color: white; padding: 1rem; text-decoration: none; border-radius: 8px; font-weight: 800; margin-top: 1.5rem; text-align: center; transition: 0.3s; }
         .btn-krypto:hover { background: #732d91; transform: translateY(-2px); }
+
+        /* Cookie lišta CSS */
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
+        }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
     </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
 <body>
 
@@ -54,8 +76,6 @@
             <div class="crypto-card"><span>SOL</span> <strong>Načítání...</strong></div>
         </div>
 
-        
-
         <div class="cta-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
             <div class="info-section">
                 <h3>Akcie a ETF</h3>
@@ -76,7 +96,51 @@
     <p>&copy; 2026 podtrzeno.cz | Data poskytuje CoinGecko API. Investování je rizikové.</p>
 </footer>
 
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
+    </div>
+</div>
+
 <script>
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+
+    /* --- LOGIKA TRŽNÍCH DAT --- */
     function renderData(data) {
         const dashboard = document.getElementById('crypto-dashboard');
         const coins = [
@@ -90,7 +154,7 @@
         coins.forEach(coin => {
             if (data[coin.id]) {
                 const price = Math.round(data[coin.id].czk).toLocaleString('cs-CZ');
-                const change = data[coin.id].czk_24h_change.toFixed(2);
+                const change = data[coin.id].czk_24h_change ? data[coin.id].czk_24h_change.toFixed(2) : "0.00";
                 const isUp = change >= 0;
                 html += `
                     <div class="crypto-card">
@@ -115,7 +179,7 @@
         const cachedTime = localStorage.getItem(cacheTimeKey);
         const now = Date.now();
 
-        // Pokud je cache mladší 2 minuty, ani nezkoušej API (šetříme limity)
+        // Pokud je cache mladší 2 minuty, použijeme ji (šetříme API limity)
         if (cached && cachedTime && (now - cachedTime < 120000)) {
             renderData(JSON.parse(cached));
             return;
@@ -138,13 +202,14 @@
 
         } catch (e) {
             if (cached) renderData(JSON.parse(cached));
+            console.warn("Chyba při načítání krypto dat");
         }
     }
 
-    window.addEventListener('load', () => {
-        fetchCryptoData();
-        setInterval(fetchCryptoData, 60000);
-    });
+    // Inicializace
+    fetchCryptoData();
+    // Interval 2 minuty pro aktualizaci
+    setInterval(fetchCryptoData, 120000);
 </script>
 </body>
 </html>

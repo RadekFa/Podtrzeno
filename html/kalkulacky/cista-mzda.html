@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Vypočítejte si čistou mzdu pro rok 2026. Přesný výpočet odvodů na sociální a zdravotní pojištění, daňové slevy a rozpis čisté výplaty.">
     <title>Kalkulačka čisté mzdy 2026 | Podtrženo.cz</title>
+    
     <link rel="stylesheet" href="../../styles.css">
     <link rel="icon" type="image/svg+xml" href="../../favicon.png">
     <link rel="apple-touch-icon" href="../../favicon.png">
+
     <style>
         .calc-card { background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .form-label { display: flex; align-items: center; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
@@ -21,22 +23,33 @@
         .btn-calc:hover { background: #166534; }
         
         .res-box { display: none; margin-top: 2rem; padding: 2rem; background: #f0fdf4; border: 2px solid #15803d; border-radius: 12px; text-align: center; }
-        
         .result-breakdown strong { color: #0f172a; font-weight: 800; }
         .negative strong { color: #b91c1c; } 
 
-        .disclaimer-footer {
-            background-color: #f1f5f9;
-            border-top: 1px solid #e2e8f0;
-            padding: 2rem 5%;
-            margin-top: 3rem;
-            font-size: 0.875rem;
-            color: #1e293b; 
-            text-align: center;
-            line-height: 1.6;
+        .disclaimer-footer { background-color: #f1f5f9; border-top: 1px solid #e2e8f0; padding: 2rem 5%; margin-top: 3rem; font-size: 0.875rem; color: #1e293b; text-align: center; line-height: 1.6; }
+        
+        /* Cookie lišta CSS */
+        #cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1a2b3c; color: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; border-left: 5px solid #27ae60;
         }
-        .disclaimer-footer p { color: #334155; margin-top: 0.5rem; }
+        #cookie-banner p { margin: 0 20px 0 0; font-size: 0.9rem; flex: 1; min-width: 250px; }
+        .cookie-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .cookie-btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .btn-accept { background: #27ae60; color: white; }
+        .btn-decline { background: #3e4e5e; color: #ccc; }
     </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TYD8G2RZBP" type="text/plain" class="ga-script"></script>
+    <script type="text/plain" class="ga-script">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TYD8G2RZBP');
+    </script>
 </head>
 <body>
 
@@ -58,30 +71,12 @@
         <p style="margin-bottom: 2rem; color: #334155; font-weight: 500;">Zjistěte přesný rozpis vaší výplaty, odvodů na pojištění a daní.</p>
 
         <div class="calc-card">
-            <label class="form-label" for="hruba-mzda">
-                Měsíční hrubá mzda
-                <div class="tooltip">
-                    <svg class="tooltip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; vertical-align: middle;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                    </svg>
-                    <span class="tooltip-text">Částka sjednaná v pracovní smlouvě před zdaněním a odvody.</span>
-                </div>
-            </label>
+            <label class="form-label" for="hruba-mzda">Měsíční hrubá mzda (Kč)</label>
             <input type="number" id="hruba-mzda" class="input-main" value="45000">
 
             <label class="check-box-ui">
                 <input type="checkbox" id="uplatnit-poplatnik" checked>
-                <span>Uplatnit slevu na poplatníka</span>
-                <div class="tooltip">
-                    <svg class="tooltip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; vertical-align: middle;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                    </svg>
-                    <span class="tooltip-text tooltip-text--slevaPoplatnika">Základní daňová sleva ve výši 2 570 Kč měsíčně.</span>
-                </div>
+                <span>Uplatnit slevu na poplatníka (2 570 Kč)</span>
             </label>
 
             <button class="btn-calc" onclick="calculate()">Vypočítat čistou mzdu</button>
@@ -108,47 +103,73 @@
                         <strong id="out-dan"></strong>
                     </div>
                 </div>
-
-                <p style="font-size: 0.8rem; color: #475569; margin-top: 1.5rem; font-style: italic; line-height: 1.4;">
-                    * Výpočet vychází z legislativy pro rok 2026. Výsledek je informativní.
-                </p>
             </div>
         </div>
-
-        <article style="margin-top: 4rem;">
-            <h2>Legislativa a odvody 2026</h2>
-            <p>Výpočet reflektuje aktuální sazby pojistného pro zaměstnance. Zdravotní pojištění tvoří 4,5 % a sociální pojištění 7,1 % z hrubé mzdy. Daň z příjmu je stanovena na 15 % pro základní pásmo.</p>
-        </article>
     </main>
-
-    <aside>
-        <div class="ad-space"></div>
-    </aside>
 </div>
 
-<div class="disclaimer-footer">
-    <strong>Důležité upozornění:</strong>
-    <p>Obsah webu Podtrženo.cz slouží výhradně pro informační účely. Veškeré výpočty jsou orientační a nepředstavují finanční ani právní poradenství.</p>
-</div>
-
-<footer>
-    <div class="footer-bottom">
-        &copy; 2026 podtrzeno.cz | Vše sečteno a podtrženo.
+<div id="cookie-banner">
+    <p>Abych mohl vylepšovat kalkulačky Podtrženo.cz, používám s vaším souhlasem soubory cookies pro analýzu návštěvnosti.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn btn-decline" onclick="cookieAction('reject')">Jen nezbytné</button>
+        <button class="cookie-btn btn-accept" onclick="cookieAction('accept')">Souhlasím</button>
     </div>
-</footer>
+</div>
 
 <script>
+    /* --- LOGIKA COOKIE LIŠTY --- */
+    function cookieAction(action) {
+        if (action === 'accept') {
+            localStorage.setItem('cookieConsent', 'accepted');
+            activateGA();
+        } else {
+            localStorage.setItem('cookieConsent', 'rejected');
+        }
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function activateGA() {
+        const scripts = document.querySelectorAll('.ga-script');
+        scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            if (script.src) {
+                newScript.src = script.src;
+                newScript.async = true;
+            } else {
+                newScript.innerHTML = script.innerHTML;
+            }
+            document.head.appendChild(newScript);
+            script.remove();
+        });
+    }
+
+    window.onload = function() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        } else if (consent === 'accepted') {
+            activateGA();
+        }
+    };
+
+    /* --- LOGIKA VÝPOČTU MZDY --- */
     function calculate() {
         const hruba = parseFloat(document.getElementById('hruba-mzda').value);
         const hasPoplatnik = document.getElementById('uplatnit-poplatnik').checked;
 
         if (isNaN(hruba) || hruba <= 0) return;
 
-        const zdrav = hruba * 0.045;
-        const soc = hruba * 0.071;
-        let dan = hruba * 0.15;
-        const sleva = hasPoplatnik ? 2570 : 0;
-        dan = Math.max(0, dan - sleva);
+        // Zdravotní pojištění (4,5 % za zaměstnance)
+        const zdrav = Math.ceil(hruba * 0.045); 
+        // Sociální pojištění (7,1 % za zaměstnance - sazba pro rok 2026)
+        const soc = Math.ceil(hruba * 0.071);
+        
+        // Daň z příjmu (15 %)
+        let dan = Math.floor(hruba * 0.15);
+        const slevaPoplatnik = hasPoplatnik ? 2570 : 0;
+        
+        // Výpočet výsledné daně po slevě
+        dan = Math.max(0, dan - slevaPoplatnik);
         
         const cista = hruba - zdrav - soc - dan;
 
